@@ -69,7 +69,7 @@ To register a script to a new address, run
     $ cd localdb
     $ python /path/to/crcc.py update path/to/script.crs
 
-The generated address will be printed to standard out and the private key will be saved to the database (in plaintext (!)) 
+The generated address will be printed to standard out and the private key will be saved to the database (in plaintext (!), so be sure you either use throwaway addresses or trust the node operator) 
 
 Alternately, you may provide a private key as a second argument to register a specific address to the script (for vanity addresses)
     $ python crcc.py update path/to/script.crs 5KPvPhq2i912WMaXyWtCSj55Fk8nuqHYAmA66tVMpbycLNNhb6z
@@ -83,9 +83,11 @@ To run the listener daemon,
     $ cd localdb
     $ python /path/to/crcc.py listen
 
-WARNING: Due to a bug in the lister daemon, the daemon cannot be stopped with Ctrl-C.  This bug is being fixed.
+WARNING: Due to a bug in the listener daemon, the daemon cannot be stopped with Ctrl-C.  This bug is being fixed.
 
 Support/Thanks
 --------------------------
 
-If you use or like this project please consider donating.  
+If you use or like this project please consider donating.   Address: 1RELAY11yrKkqxpCSwE7moim2s38a4nJN
+
+

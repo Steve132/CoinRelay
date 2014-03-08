@@ -1,0 +1,23 @@
+#This is a simple CORRECT lottery
+# The probability of winning a given roll is (1/6).  Therefore the probability of 
+# winning after n rolls is a geometric series (sum from p=0 to (n-1) (5/6)^p)*(1/6)
+# Therefore the correct formula for a win is the above
+# Therefore its (1/6)*( (1-(5/6)^n) / (1-(5/6)) for the probability of a win
+# (1/6)* ((6^n / 6^n) - (5^n / 6^n)) / ((6-5)/6)
+# ((6^n - 5^n) / 6^n)
+# 1-5^n/6^n
+# probability for a loss after N rolls is 
+# 5^n/6^n
+
+999999				#chance of losing=999999/1000000
+$in nano<0.01> div		#number of tickets player bought at 0.01 btc/ticket
+pow				#lose^n
+1000000
+$in nano<0.01> div
+pow				#win^n
+random greater if		#random number between 0 and win^n.  if greater than lose^n, win
+	$balance minus_fee	#win the whole pot (minus the tx fee)
+	reflect			#reflect the amount back to the winner
+	$default_fee		#default_fee on the stack
+	pushtx			#initiate
+endif

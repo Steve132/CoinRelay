@@ -1,0 +1,7 @@
+timestamp<now>						#put today's timestamp on the stack
+timestamp<2021,2,17>					#put the timestamp for 2-17-2021 on the stack
+greater if						#if today is after 2-17-2021
+	$balance minus_fee				#send the whole balance (minus a fee)
+	send<1sisHenyVY5yt2DaAZrxR86h1vdkxmjFX>		#to my sister's address (that I previously arranged)
+	$default_fee pushtx
+endif

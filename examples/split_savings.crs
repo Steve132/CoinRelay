@@ -1,0 +1,10 @@
+balance<1rentJgZQxwq2XnFpy9wAAnMFd2gdqV4L> 			#Check the value of the money in my rent account
+nano<864.23> rate<usdbtc>		#Convert 864.23 to btc
+sub					#how much more btc do I need?
+dup					#If I need some more
+0 greater if
+	$balance minus_fee
+	min				#which is less, the amount that I need to send or the amount that I have to send?
+	send<1rentJgZQxwq2XnFpy9wAAnMFd2gdqV4L>
+	$default_fee pushtx
+endif
