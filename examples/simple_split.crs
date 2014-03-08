@@ -1,0 +1,12 @@
+#simple Splitting
+
+$balance 18 mul 100 div
+send<1mytaxes>			#send 18% to my taxes
+$balance 4 mul 100 div 
+send<1mychurch>			#send 4% to my church
+$balance 40 mul 100 div		#send 40% to my wife
+send<1mywife>
+$balance_unspent minus_fee	#send whatever is left to my savings
+send<1mysavings>
+$default_fee pushtx
+
