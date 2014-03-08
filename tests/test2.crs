@@ -1,0 +1,10 @@
+$balance
+if
+	$balance
+	$default_fee
+	sub
+	send<1Hp3mSYVrREmQtKGS5hrMVmc8uLbN6nskN>
+	$default_fee
+	pushtx
+endif
+

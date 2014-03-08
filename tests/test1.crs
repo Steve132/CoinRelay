@@ -1,0 +1,6 @@
+10 20 mul
+dup
+log
+5 sub
+log
+

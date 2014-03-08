@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import language
+import coinrelay
 import lib.bitcoin_listener
 import lib.pybitcointools
 import os.path,os
@@ -32,10 +32,10 @@ def _compileandassemble(fp):
 	return assembled
 
 def _loadfile(address):
-	make_sure_path_exists('db')
-	fp=os.path.join('db',address+'.crs')
-	cfp=os.path.join('db',address+'.crb')
-	kfp=os.path.join('db',address+'.key')
+	make_sure_path_exists('.crdb')
+	fp=os.path.join('.crdb',address+'.crs')
+	cfp=os.path.join('.crdb',address+'.crb')
+	kfp=os.path.join('.crdb',address+'.key')
 	
 	kfpe=os.path.exists(kfp)
 	cfpe=os.path.exists(cfp)
@@ -57,14 +57,14 @@ def _loadfile(address):
 		return False
 		
 
-def serve():
+def listen():
 	print "Now listening to the bitcoin network for transactions."
 	rt=language.runtime(debugmode=True)
 	def handlepayment(from_address,to_address,amount,txid):
 		lf=_loadfile(to_address)
 		if(lf):
 			print "Script triggered for %s" % to_address
-			btc_private_key=open(os.path.join('db',to_address+'.key')).read().strip()
+			btc_private_key=open(os.path.join('.crdb',to_address+'.key')).read().strip()
 			result=rt.run_coinscript(lf,btc_private_key,in_amount=int(amount)*10,in_address=from_address,balance=None)
 			print rt.pretty_print_logs(result)
 			
@@ -75,11 +75,11 @@ def serve():
 	lib.bitcoin_listener.run_wire_listener(on_new=htx)
 
 def update(source_file,private_key=lib.pybitcointools.random_key()):
-	make_sure_path_exists('db')
+	make_sure_path_exists('.crdb')
 	#if(len(private_key) > 
 	myaddress=lib.pybitcointools.privkey_to_address(private_key)
-	copy(source_file,os.path.join('db',myaddress+'.crs'))
-	open(os.path.join('db',myaddress+'.key'),'w').write(private_key)
+	copy(source_file,os.path.join('.crdb',myaddress+'.crs'))
+	open(os.path.join('.crdb',myaddress+'.key'),'w').write(private_key)
 	print "A copy of %s was made, listening on address %s" % (source_file,myaddress)
 	
 def test(source_file,balance='1.0',input_amount='0.1'):
@@ -90,23 +90,29 @@ def test(source_file,balance='1.0',input_amount='0.1'):
 
 def help():
 	print """
-	CoinRelay Standalone Client+Compiler
-	Usage:	%s [command] [command arguments]
-	Commands:
-		help	
-			Display this message
-		test	<source_file.crs> [balance <float> (defaults to 1.0)] [transaction in amount <float> (defaults to 0.1)]	
-			Compile and test a script.  This command compiles and executes the script on the cmdline to see what would happen.  Prints the generated python intermediate code, and runs the script assuming a
-			balance and input triggered the transaction.  All commands with side effects (such as send and reflect) are simulated not sent to the blockchain.
-		update	<source_file.crs> [private_key]
-			Update the backend database in the current directory to listen for 'script'.  This can be done while the client is running in 'serve' mode, or in preparation for a server.
-			
-		
+CoinRelay Standalone Client+Compiler
+Usage:	%s [command] [command arguments]
+Commands:
+	help	
+		Display this message
+	test	<source_file.crs> [balance <float> (defaults to 1.0)] [transaction in amount <float> (defaults to 0.1)]	
+		Compile and test a script.  This command compiles and executes the script on the cmdline to see what would happen.  Prints the generated python intermediate code, and runs the script assuming a
+		balance and input triggered the transaction.  All commands with side effects (such as send and reflect) are simulated not sent to the blockchain.
+	update	<source_file.crs> [private_key]
+		Update the backend database in the current directory to listen for 'script'.  This can be done while crcc.py is running in 'listen' mode in another process, or before listen mode is run to prepare the database
+	listen
+		Starts the coinrelay standalone client in 'listen' mode.  This is the production mode.  Using the database, ( found in the .crdb folder in the current directory), it listens to incoming messages from the blockchain and runs the associated scripts in the database registered to an address if the address exists.
 
+Aliases:
+	register:	alias for 'update'
+	serve:		alias for 'listen'
+	compile:	alias for 'test'
+"""
+			
 if __name__=="__main__":
 	if(len(sys.argv) > 1):
 		funcarg=sys.argv[1]
 	else:
-		funcarg='serve'
-	funcs={"serve":serve,"update":update,"test":test}
+		funcarg='help'
+	funcs={"listen":listen,"serve":listen,"register":update,"update":update,"test":test,"compile":test,"help":help}
 	funcs[funcarg](*sys.argv[2:])
