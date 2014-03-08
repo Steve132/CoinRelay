@@ -44,6 +44,7 @@ class baseruntime(object):
 		self.saref=sa
 		self.stref=st
 		exec compiled_code in safe_scope
+		self.logevent(lg,-1)
 		return lg
 
 	def price_query(self,amount,direction,scheme=None):	#TODO,scheme...only scheme is 'blockchain'
@@ -267,6 +268,9 @@ def _func_if():
 def _func_endif():
 	"""(Control|endif|Must be preceded by a matching 'if'.  Ends a control block for an if statement   )"""
 	return "",-1
+def _func_nop():
+	"""(Control|no-op|Does nothing.)"""
+	return "",0
 
 #def _func_log():
 #	"""(Control|print|Prints the top integer off the stack as a "LOG" statement )"""
