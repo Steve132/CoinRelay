@@ -1,7 +1,0 @@
-timestamp<now>
-timestamp<2021,2,17>
-greater if
-	$balance minus_fee
-	send<1mysistersaccount>
-	$default_fee pushtx
-endif
