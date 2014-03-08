@@ -341,7 +341,7 @@ def print_markdown_documentation():
 	categories={}
 	for k,v in globals().iteritems():
 		if(k[:6]=='_func_'):
-			vdoc=v.__doc__.strip("()").split("|")
+			vdoc=v.__doc__.replace('<','&lt;').replace('>','&gt;').strip("()").split("|")
 			funcname=k[6:]
 			category=vdoc[0]
 			summary=vdoc[1]
