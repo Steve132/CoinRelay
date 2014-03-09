@@ -1,8 +1,6 @@
 CoinRelay
 =========
 
-***If you use or like this project please consider donating: 1RELAY11yrKkqxpCSwE7moim2s38a4nJN***
-
 CoinRelay: crypto-currency payment response scripting language.
 
 What does the above mouthful mean?
