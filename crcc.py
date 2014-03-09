@@ -73,7 +73,7 @@ def listen():
 
 	def htx(txid):
 		print "Heard Transaction: %s" % (txid['hash'])
-		lib.bitcoin_listener.handletx(txid,handlepayment)	
+		lib.bitcoin_listener.handletx(txid,handle)	
 
 	lib.bitcoin_listener.run_wire_listener(on_new=htx)
 
