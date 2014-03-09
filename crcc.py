@@ -6,6 +6,7 @@ import lib.pybitcointools
 import os.path,os
 import logging
 from shutil import copy
+import traceback
 
 import os
 import errno
@@ -28,7 +29,7 @@ def make_sure_path_exists(path):
 def _compileandassemble(fp):
 	compiled=coinrelay.compile_coinscript(open(fp,'r').read())
 	print "File %s Compiled as:\n%s" % (fp,compiled)
-	assembled=language.assemble_coinscript(compiled,fp)
+	assembled=coinrelay.assemble_coinscript(compiled,fp)
 	return assembled
 
 def _loadfile(address):
@@ -57,18 +58,23 @@ def _loadfile(address):
 		return False
 	
 def _trigger_response(rt,from_address,to_address,amount,txid):
+	try:
 		lf=_loadfile(to_address)
 		if(lf):
 			print "Script triggered for %s" % to_address
 			btc_private_key=open(os.path.join('.crdb',to_address+'.key')).read().strip()
 			result=rt.run_coinscript(lf,btc_private_key,in_amount=int(amount)*10,in_address=from_address,balance=None)
 			print rt.pretty_print_logs(result)
+	except:
+		print "Error in coinscript runtime:"
+		traceback.print_exc(file=sys.stdout)
 
 def listen():
 	print "Now listening to the bitcoin network for transactions."
 	rt=coinrelay.runtime(debugmode=True)
 	
 	def handle(from_address,to_address,amount,txid):
+		print from_address,to_address
 		return _trigger_response(rt,from_address,to_address,amount,txid)
 
 	def htx(txid):
@@ -82,7 +88,7 @@ def update(source_file,private_key=lib.pybitcointools.random_key()):
 	#if(len(private_key) > 
 	myaddress=lib.pybitcointools.privkey_to_address(private_key)
 	copy(source_file,os.path.join('.crdb',myaddress+'.crs'))
-	open(os.path.join('.crdb',myaddress+'.key'),'w').write(private_key)
+	open(os.path.join('.crdb',myaddress+'.key'),'w').write(private_key)#lib.pybitcointools.hex_to_b58check(private_key))
 	print "A copy of %s was made, listening on address %s" % (source_file,myaddress)
 	
 def test(source_file,balance='1.0',input_amount='0.1'):

@@ -43,7 +43,7 @@ class baseruntime(object):
 		self.saref=sa
 		self.stref=st
 		exec compiled_code in safe_scope
-		self.logevent(lg,-1)
+		self.logevent(lg,-1,'<end program>')
 		return lg
 
 	def price_query(self,amount,direction,scheme=None):	#TODO,scheme...only scheme is 'blockchain'
@@ -64,8 +64,8 @@ class baseruntime(object):
 		return timegm(datetime.utcnow().utctimetuple())
 	def get_random(self,cei):
 		return random.randint(0,cei)	#TODO: NOT SECURE
-	def logevent(self,ls,i):
-		ls.append({'si':i,'st':list(self.stref),'sa':dict(self.saref.copy())})
+	def logevent(self,ls,i,cmd):
+		ls.append({'si':i,'cmd':cmd,'st':list(self.stref),'sa':dict(self.saref.copy())})
 		#self.logstate.append({'st':list(self.stref)})
 	def pretty_print_logs(self,ls):
 		s="token spent st\n"
@@ -99,12 +99,12 @@ class runtime(baseruntime):
 			baseruntime.logevent(self,ls,i)
 
 
-def compile_coinscript(text):
+def compile_coinscript(text,debug=True):
 	tokens=_tokenize(text)
-	return _translate_tokens(tokens)
+	return _translate_tokens(tokens,compilerflags={'debugmode':debug})
 	
 
-def assemble_coinscript(python_source,crfile='coinrelay_source.crs'):
+def assemble_coinscript(python_source,crfile):
 	return marshal.dumps(compile(python_source,'<code from %s.py>' % (crfile),'exec'))	
 		
 def _funclookup(opname):
@@ -125,28 +125,42 @@ r=%s
 st.append(r)
 """ % (num_args,num_args,opstring),0
 
-def _compile_token(c):
-	if(c[1]):	#Literal integer
+def _classify_token(c):
+	if(c[1]):
+		return "literal",c[1]
+	if(c[2]):
+		return "environment",c[2]
+	if(c[3]):
+		return "instruction",c[3]+'<%s>'%(c[4])
+	if(c[0]):
+		return "comment",c[0]
+
+def _compile_token(c,cls):
+	if(cls=="literal"):	#Literal integer
 		return _compile_literal(c[1])
-	if(c[2]):	#Argument input
+	if(cls=="environment"):	#Argument input
 		return _compile_argument(c[2])
-	if(c[3]):	#function call
+	if(cls=="instruction"):	#function call
 		arglist=[]
 		if(c[4]):
 			arglist=c[4].strip('<>').split(',')
 		f=_funclookup(c[3].lower())
 		#print f(*arglist)
 		return f(*arglist)
-	if(c[0]):
+	if(cls=="comment"):
 		return c[0],0
-	return "",0 #throw an error here
+	return "",0#throw an error here
 	
-def _translate_tokens(tokens):
+def _translate_tokens(tokens,compilerflags):
 	indentlevel=0
 	funcout=""
-	for i,c in enumerate(tokens):
-		code,indentchange=_compile_token(c)				#compile the token
-		code=('rt.logevent(lg,%d)\n' % (i))+code
+	i=0
+	for c in tokens:
+		cls,tokenstr=_classify_token(c)
+		code,indentchange=_compile_token(c,cls)				#compile the token
+		if(compilerflags['debugmode'] and cls != "comment"):
+			code=('rt.logevent(lg,%d,"%s")\n' % (i,tokenstr))+code
+			i+=1
 		funcout+=('\n'+code).replace('\n','\n'+'\t'*indentlevel)	#indent the code
 		
 		indentlevel+=indentchange
@@ -247,7 +261,7 @@ tx.add(ad,'%s')
 sa['spent']+=ad
 """ % (address),0
 
-def _func_reflect(address):
+def _func_reflect():
 	"""(Transactions|send bitcoin to source|Pop the top item off of the stack, interpret it as the amount of nanoXBT to send to the address that initiated this transaction.  Append that destination and amount to the current transaction)"""
 	return """
 ad=st.pop()
