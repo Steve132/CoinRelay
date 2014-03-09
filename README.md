@@ -16,6 +16,8 @@ Possible uses include:
 + Investment plans involving timed conversion to fiat
 + And many more!
 
+>***If you use or like this project please consider donating:*** 1RELAY11yrKkqxpCSwE7moim2s38a4nJN
+
 Language
 ---------
 
