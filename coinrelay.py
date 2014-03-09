@@ -29,9 +29,8 @@ class baseruntime(object):
 			
 		st=[]
 		sa={	'balance':balance,
-			'balance_unspent':balance,
 			'in':in_amount,
-			'in_unspent':in_amount,
+			'spent':0,
 			'default_fee':blockchain.default_fee
 		}
 		loca = {'in_address':in_address,
@@ -69,9 +68,9 @@ class baseruntime(object):
 		ls.append({'si':i,'st':list(self.stref),'sa':dict(self.saref.copy())})
 		#self.logstate.append({'st':list(self.stref)})
 	def pretty_print_logs(self,ls):
-		s="token balance_unspent     in_unspent st\n"
+		s="token spent st\n"
 		for r in ls:
-			s+="%5d  %14d %14d %s\n" %(r['si'],r['sa']['balance_unspent'],r['sa']['in_unspent'],str(r['st']))
+			s+="%5d  %14d %s\n" %(r['si'],r['sa']['spent'],str(r['st']))
 		return s
 			
 #Test addresses
@@ -245,16 +244,15 @@ def _func_send(address):
 	return """
 ad=st.pop()
 tx.add(ad,'%s')
-sa['balance_unspent']=max(sa['balance_unspent']-ad,0)
-sa['in_unspent']=max(sa['in_unspent']-ad,0)""" % (address),0
+sa['spent']+=ad
+""" % (address),0
 
 def _func_reflect(address):
 	"""(Transactions|send bitcoin to source|Pop the top item off of the stack, interpret it as the amount of nanoXBT to send to the address that initiated this transaction.  Append that destination and amount to the current transaction)"""
 	return """
 ad=st.pop()
 tx.add(ad,in_address)
-sa['balance_unspent']=max(sa['balance_unspent']-ad,0)
-sa['in_unspent']=max(sa['in_unspent']-ad,0)""",0
+sa['spent']+=ad""",0
 def _func_pushtx():
 	"""(Transactions|send bitcoin|Pop the top item off of the stack, interpret it as the fee in nanoXBT to use in the current transaction. Broadcast the current transaction to the blockchain immediately and reset the current transaction)"""
 	return "rt.push_tx_to_blockchain(pk,tx,fee=st.pop())",0
@@ -322,6 +320,9 @@ def _func_random():
 def _func_minus_fee():
 	"""(Arithmetic|st[-1]-=$default_fee|Subtracts the current default suggested transaction fee from the value on top of the stack)"""
 	return "st[-1]-=sa['default_fee']",0
+def _func_minus_spent():
+	"""(Arithmetic|st[-1]-=$default_fee|Subtracts the current 'accounted for' spend amount from the value on top of the stack)"""
+	return "st[-1]-=sa['spent']",0
 
 #TODO: Feature....send using ANOTHER private key.  This is serious mojo, it allows you to read and write program state into the blockchain...put this off till version 2..maybe send_remote
 #maybe addresses as integers (like timestamp)
