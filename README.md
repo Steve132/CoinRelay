@@ -55,7 +55,7 @@ This implementation of coinrelay includes a development tool 'testing' mode whic
 
 This process is recommended to develop/test your own scripts prior to deployment as well.  
 
-Side note, the coolest example is probably [examples/satoshi48
+Side note, the coolest example is probably [SatoshiDice 48% in 15 lines](examples/satoshi48.crs)
     
 ####Running a script on the real blockchain
 
@@ -72,6 +72,7 @@ To register a script to a new address, run
 The generated address will be printed to standard out and the private key will be saved to the database (in plaintext (!), so be sure you either use throwaway addresses or trust the node operator) 
 
 Alternately, you may provide a private key as a second argument to register a specific address to the script (for vanity addresses)
+
     $ python crcc.py update path/to/script.crs 5KPvPhq2i912WMaXyWtCSj55Fk8nuqHYAmA66tVMpbycLNNhb6z
 
 If you are running the listener daemon at the same time in another process, you **CAN** update the script associated with the address in parallel.  Or you may update the script before the listener is running. 
@@ -88,6 +89,6 @@ WARNING: Due to a bug in the listener daemon, the daemon cannot be stopped with 
 Support/Thanks
 --------------------------
 
-If you use or like this project please consider donating.   Address: 1RELAY11yrKkqxpCSwE7moim2s38a4nJN
+If you use or like this project please consider donating to me the developer: 1RELAY11yrKkqxpCSwE7moim2s38a4nJN
 
 
