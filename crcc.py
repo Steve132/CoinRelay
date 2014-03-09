@@ -26,7 +26,7 @@ def make_sure_path_exists(path):
             raise
 
 def _compileandassemble(fp):
-	compiled=language.compile_coinscript(open(fp,'r').read())
+	compiled=coinrelay.compile_coinscript(open(fp,'r').read())
 	print "File %s Compiled as:\n%s" % (fp,compiled)
 	assembled=language.assemble_coinscript(compiled,fp)
 	return assembled
@@ -55,22 +55,25 @@ def _loadfile(address):
 		return open(cfp,'rb').read()
 	else:
 		return False
-		
-
-def listen():
-	print "Now listening to the bitcoin network for transactions."
-	rt=language.runtime(debugmode=True)
-	def handlepayment(from_address,to_address,amount,txid):
+	
+def _trigger_response(rt,from_address,to_address,amount,txid):
 		lf=_loadfile(to_address)
 		if(lf):
 			print "Script triggered for %s" % to_address
 			btc_private_key=open(os.path.join('.crdb',to_address+'.key')).read().strip()
 			result=rt.run_coinscript(lf,btc_private_key,in_amount=int(amount)*10,in_address=from_address,balance=None)
 			print rt.pretty_print_logs(result)
-			
+
+def listen():
+	print "Now listening to the bitcoin network for transactions."
+	rt=coinrelay.runtime(debugmode=True)
+	
+	def handle(from_address,to_address,amount,txid):
+		return _trigger_response(rt,from_address,to_address,amount,txid)
+
 	def htx(txid):
 		print "Heard Transaction: %s" % (txid['hash'])
-		lib.bitcoin_listener.handletx(txid,handlepayment)
+		lib.bitcoin_listener.handletx(txid,handlepayment)	
 
 	lib.bitcoin_listener.run_wire_listener(on_new=htx)
 
@@ -83,10 +86,15 @@ def update(source_file,private_key=lib.pybitcointools.random_key()):
 	print "A copy of %s was made, listening on address %s" % (source_file,myaddress)
 	
 def test(source_file,balance='1.0',input_amount='0.1'):
-	rt=language.testruntime()
+	rt=coinrelay.testruntime()
 	assembled=_compileandassemble(source_file)
 	result=rt.run_coinscript(assembled,int(1e9*float(balance)),int(1e9*float(input_amount)))
 	print rt.pretty_print_logs(result)
+
+def trigger(to_address,from_address,amount='10000000',txid='<no tx id>'):
+	rt=coinrelay.runtime(debugmode=True)
+	return _trigger_response(rt,from_address,to_address,int(amount),txid)
+	
 
 def help():
 	print """
@@ -102,11 +110,16 @@ Commands:
 		Update the backend database in the current directory to listen for 'script'.  This can be done while crcc.py is running in 'listen' mode in another process, or before listen mode is run to prepare the database
 	listen
 		Starts the coinrelay standalone client in 'listen' mode.  This is the production mode.  Using the database, ( found in the .crdb folder in the current directory), it listens to incoming messages from the blockchain and runs the associated scripts in the database registered to an address if the address exists.
+	
+	trigger <to_address> <from_address> [amount <int> (defaults to 10000000)] [txid]
+		This immediately ACTUALLY executes the code in the database that is registered to <to_address>, as if a transaction with <txid> from <from_address> to <to_address> occurred.  This is useful for creating cron jobs
+		to trigger coinscript code or responding to other events instead of a blockchain.
 
 Aliases:
 	register:	alias for 'update'
 	serve:		alias for 'listen'
 	compile:	alias for 'test'
+	execute:	alias for 'trigger'
 """
 			
 if __name__=="__main__":

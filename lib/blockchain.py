@@ -35,8 +35,7 @@ def request_wait():
 	elif(request_time_left > request_quota):
 		request_time_left=request_quota
 	
-	
-	    
+
 def make_request(*args):
 	opener = urllib2.build_opener()
 	opener.addheaders = [('User-agent', 'Mozilla/5.0'+str(random.randrange(1000000)))]
