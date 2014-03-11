@@ -100,7 +100,6 @@ def test(source_file,balance='1.0',input_amount='0.1'):
 def trigger(to_address,from_address,amount='10000000',txid='<no tx id>'):
 	rt=coinrelay.runtime(debugmode=True)
 	return _trigger_response(rt,from_address,to_address,int(amount),txid)
-	
 
 def help():
 	print """

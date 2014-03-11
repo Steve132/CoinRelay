@@ -1,0 +1,253 @@
+###REDUNDANCY 0
+1
+if
+	100000 send<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 1
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+
+if
+	100000 send<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 2
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+
+if
+	100000 send<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 3
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+and
+and
+
+if
+	100000 send<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 4
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+and
+and
+
+if
+	100000 send<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 5
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+and
+and
+and
+
+if
+	100000 send<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 6
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+and
+and
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+and
+and
+and
+
+if
+	100000 send<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 7
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+and
+and
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+and
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+timestamp<now> timestamp<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf> sub 86400 greater
+and
+and
+and
+
+if
+	100000 send<1CjeQ6VHKATiTgJrpYo9rUB7SL91U1dMwK>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 8
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+and
+and
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+and
+timestamp<now> timestamp<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf> sub 86400 greater
+timestamp<now> timestamp<1CjeQ6VHKATiTgJrpYo9rUB7SL91U1dMwK> sub 86400 greater
+and
+and
+and
+
+if
+	100000 send<1A1GAi3ZtaahuhAt8HYyGBL2YWpP11W7vP>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 9
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+and
+and
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+and
+timestamp<now> timestamp<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf> sub 86400 greater
+timestamp<now> timestamp<1CjeQ6VHKATiTgJrpYo9rUB7SL91U1dMwK> sub 86400 greater
+timestamp<now> timestamp<1A1GAi3ZtaahuhAt8HYyGBL2YWpP11W7vP> sub 86400 greater
+and
+and
+and
+and
+
+if
+	100000 send<1MyaU6mmJmJx3QU1pjJqYqJRzRUhAz4Wkf>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 10
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+and
+and
+and
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+timestamp<now> timestamp<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf> sub 86400 greater
+and
+timestamp<now> timestamp<1CjeQ6VHKATiTgJrpYo9rUB7SL91U1dMwK> sub 86400 greater
+timestamp<now> timestamp<1A1GAi3ZtaahuhAt8HYyGBL2YWpP11W7vP> sub 86400 greater
+timestamp<now> timestamp<1MyaU6mmJmJx3QU1pjJqYqJRzRUhAz4Wkf> sub 86400 greater
+and
+and
+and
+and
+
+if
+	100000 send<19WXsMTMXaXnPpGuCoAjBN3PjzgH9JciSU>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################
+###REDUNDANCY 11
+timestamp<now> timestamp<1J4PQwonsj24RVfJmBEr94uQbFP5MJEipf> sub 86400 greater
+timestamp<now> timestamp<1Dg9qbdJU4nuQfTGe7Hp3E6fj15eFXXMcW> sub 86400 greater
+and
+timestamp<now> timestamp<1KisAmJgn9sy9tDxDyh4jrUAdqtbLF5Ugm> sub 86400 greater
+timestamp<now> timestamp<1MRitMv32m845qAfiwRvJ9vwmSVWBQr3DT> sub 86400 greater
+timestamp<now> timestamp<14ezR1TVLNZekXEWYMuZHyCvttuPvHCvns> sub 86400 greater
+and
+and
+and
+timestamp<now> timestamp<1NXdGfpbwhAzHjX1FfJfNKFe7HBufDVzrs> sub 86400 greater
+timestamp<now> timestamp<18ydmC4yNZdgEVmdPkRTWA3rWw4EnVjJLf> sub 86400 greater
+timestamp<now> timestamp<1CjeQ6VHKATiTgJrpYo9rUB7SL91U1dMwK> sub 86400 greater
+and
+and
+timestamp<now> timestamp<1A1GAi3ZtaahuhAt8HYyGBL2YWpP11W7vP> sub 86400 greater
+timestamp<now> timestamp<1MyaU6mmJmJx3QU1pjJqYqJRzRUhAz4Wkf> sub 86400 greater
+timestamp<now> timestamp<19WXsMTMXaXnPpGuCoAjBN3PjzgH9JciSU> sub 86400 greater
+and
+and
+and
+and
+
+if
+	100000 send<19i7gDKbNJF4PaKmNEenbUtfGfSGCnMuhA>
+	$default_fee pushtx
+#-----BEGIN SUBSCRIPT
+	
+#-----END SUBSCRIPT
+endif
+
+####################

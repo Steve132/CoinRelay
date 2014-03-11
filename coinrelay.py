@@ -20,6 +20,8 @@ class Transaction(object):
 		self.sends={}
 	def __str__(self):
 		return 'Transaction(%s->%s)' % (self.source_addy,str(self.sends))
+	def value(self):
+		return sum([v for k,v in self.sends.iteritems()])
 
 class baseruntime(object):
 	def run_coinscript(self,mcompiled_code,btc_private_key,in_amount,in_address,balance=None):
@@ -34,14 +36,15 @@ class baseruntime(object):
 			'default_fee':blockchain.default_fee
 		}
 		loca = {'in_address':in_address,
+		        'my_address':myaddress,
 			'pk':btc_private_key }
 		tx=Transaction(myaddress)
 		lg=[]
 		compiled_code=marshal.loads(mcompiled_code)
 		safe_scope={'sa':sa,'st':st,'rt':self,'tx':tx,'lg':lg}
 		safe_scope.update(loca)
-		self.saref=sa
-		self.stref=st
+		self.saref=sa	#BAD...can't be run in parallel.
+		self.stref=st	#BAD...can't be run in parallel...TODO fix this
 		exec compiled_code in safe_scope
 		self.logevent(lg,-1,'<end program>')
 		return lg
@@ -68,10 +71,28 @@ class baseruntime(object):
 		ls.append({'si':i,'cmd':cmd,'st':list(self.stref),'sa':dict(self.saref.copy())})
 		#self.logstate.append({'st':list(self.stref)})
 	def pretty_print_logs(self,ls):
-		s="token spent st\n"
+		
+		catlen=[0,0,0]
+		def se(r):
+			return [str(x) for x in [r['si'],r['cmd'],r['sa']['spent']]]
+
 		for r in ls:
-			s+="%5d  %14d %s\n" %(r['si'],r['sa']['spent'],str(r['st']))
+			for i,p in enumerate(se(r)):
+				catlen[i]=max(len(p),catlen[i])
+
+		s="token spent st\n"
+		formatstring="%%%ds %%%ds %%%ds " % tuple(catlen)
+		
+		for r in ls:
+			ps=se(r)
+			s+=formatstring % tuple(ps) + str(r['st']) +'\n'
 		return s
+	
+	def push_tx_to_blockchain(self,pk,tx,fee=0):
+		if(self._push_tx_action(pk,tx,fee)):
+			self.saref['balance']-=tx.value()+fee
+			tx.clear()
+		
 			
 #Test addresses
 #5JwaFNNKwEnnNfXmYiUuTJkao8YjR8BsUpvwqNZJ2kdjziWm2Ek,1testp2A3NBcCNKqE2isK7mFAPQPnGmKs
@@ -82,18 +103,22 @@ class testruntime(baseruntime):
 		super(testruntime,self).__init__()
 	def run_coinscript(self,mcompiled_code,balance=int(1e9),amount_in=int(1e9)):
 		return baseruntime.run_coinscript(self,mcompiled_code,btc_private_key='5JwaFNNKwEnnNfXmYiUuTJkao8YjR8BsUpvwqNZJ2kdjziWm2Ek',balance=balance,in_amount=amount_in,in_address='1srcFhv3dJqfxbgGHyJfMythtgtHzbQtG')
-	def push_tx_to_blockchain(self,pk,tx,fee=0):
+	def _push_tx_action(self,pk,tx,fee=0):
 		print "ACTION:pushed transaction "+str(tx)+" to blockchain with a fee of %d" % (fee)
-		tx.clear()
+		return True
 
 class runtime(baseruntime):
 	def __init__(self,debugmode=False):
 		super(runtime,self).__init__()
 		self.debugmode=debugmode
 	
-	def push_tx_to_blockchain(self,pk,tx,fee=0):
-		blockchain.sendmany(pk,tx.sends,fee)
-		tx.clear()
+	def _push_tx_action(self,pk,tx,fee=0):
+		try:
+			blockchain.sendmany(pk,tx.sends,fee)
+			return True
+		except:
+			return False
+
 	def logevent(self,ls,i):
 		if(self.debugmode):
 			baseruntime.logevent(self,ls,i)
@@ -131,7 +156,7 @@ def _classify_token(c):
 	if(c[2]):
 		return "environment",c[2]
 	if(c[3]):
-		return "instruction",c[3]+'<%s>'%(c[4])
+		return "instruction",c[3]+'%s'%(c[4])
 	if(c[0]):
 		return "comment",c[0]
 
@@ -267,7 +292,7 @@ def _func_reflect():
 ad=st.pop()
 tx.add(ad,in_address)
 sa['spent']+=ad""",0
-def _func_pushtx():
+def _func_pushtx():	#TODO: balance should be updated if it succeeds
 	"""(Transactions|send bitcoin|Pop the top item off of the stack, interpret it as the fee in nanoXBT to use in the current transaction. Broadcast the current transaction to the blockchain immediately and reset the current transaction)"""
 	return "rt.push_tx_to_blockchain(pk,tx,fee=st.pop())",0
 
@@ -310,6 +335,10 @@ def _func_timestamp(*argument):
 	return "st.append(%d)" % (timegm(datetime(*arglist).utctimetuple())),0
 	#if():	#parse date attempt
 	#	return "todo",0
+
+#def _func_address(addrarg):	#maybe this is dangerous...think hard about whether int versions of addresses can go on the stack.but this lets you do checks like source verification and stuff.  Or dynamic sends.  Also makes "reflect' command obsolete
+#	if(addrarg=='this'):
+		
 
 def _func_price(direction='usdxbt',scheme=None):
 	"""(Information|price currency conversion|Based on the <conversiondirection>, does a conversion of currency.  Converts the value on top of the stack.  Conversion direction is a concatination of iso currency codes (case-insensitive) such as 'usdbtc' to find the number of bitcoin you could buy with the usd value on the stack,  or 'usdeur' or 'xbteur'.  Bitcoin can be listed as xbt or btc.|<conversiondirection> is the direction of currency conversion 6-character string)"""
