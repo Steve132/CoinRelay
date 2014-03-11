@@ -56,8 +56,8 @@ class baseruntime(object):
 	def log(self,string):
 		print 'SCRIPT LOG:'+string
 
-	def get_balance(self,addr):
-		return blockchain.getbalance(addr)
+	def get_balance(self,addr,confirms):
+		return blockchain.getbalance(addr,confirms)
 	def get_blockheight(self):
 		return blockchain.getblockheight()
 	def get_address_last_send_timestamp(self,addr):
@@ -313,10 +313,10 @@ def _func_nop():
 #	"""(Control|print|Prints the top integer off the stack as a "LOG" statement )"""
 #	return "rt.log(str(st.pop()))",0
 
-def _func_balance(address):
-	"""(Information|get balance|Checks the blockchain for the balance in bitcoin for the given <address>.  Puts the balance (in nanoXBT) onto the stack | <address> Must be a valid bitcoin address.  The address balance to check)"""
+def _func_balance(address,confirms=0):
+	"""(Information|get balance|Checks the blockchain for the balance in bitcoin for the given <address>.  Puts the balance (in nanoXBT) onto the stack | <address,confirms> Must be a valid bitcoin address.  The address balance to check,and the number of confirms required for a transaction to be included in the balance.)"""
 	#checks the balance of a given address,puts it on the stack
-	return "st.append(rt.get_balance('%s'))" % (address),0
+	return "st.append(rt.get_balance('%s',%d))" % (address,confirms),0
 def _func_blockheight():
 	"""(Information|get blockheight|Checks the blockchain for the current block height, puts it into the stack"""
 	#checks the latest block in the blockchain on the stack
