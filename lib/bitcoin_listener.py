@@ -37,7 +37,7 @@ def handleblock(b):
 	
 class Bitcoin(object):
 	def __init__(self,on_new_transaction=None,on_new_block=None):
-		endpoint='wss://ws.blockchain.info/inv'		#TODO:SECURITY: The endpoint should support SSL (wss://) to prevent man-in-the middle attacks but GAE does not by default. SERIOUS security flaw.
+		endpoint='wss://ws.blockchain.info/inv'		#TODO:SECURITY: The endpoint should support SSL (wss://) to prevent man-in-the middle attacks but GAE does not by default.  Must be enabeled
 		self.ws=websocket.WebSocketApp(endpoint,
 			on_message=self.__socket_message,
 			on_error=self.__socket_error,
@@ -63,7 +63,7 @@ class Bitcoin(object):
 	
 	def __socket_error(self,ws,err):
 		ws.keep_running=False
-		print err
+		raise err
 
 	def __socket_close(self,ws):
 		logging.info("THE WEBSOCKET CLOSED!")

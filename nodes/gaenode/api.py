@@ -12,19 +12,12 @@ class RegisteredListener(ndb.Model):
 	runtime_function_code=ndb.BlobProperty(indexed=False)
 
 #There can only be one address associated with the PK
-def update(targets,address_private_key=None):
+def update(source_code,address_private_key=None):
 	if(not address_private_key):
 		address_private_key=hexlify(secure_random(32))
 
 	address=pybitcointools.privkey_to_address(address_private_key)
 	
-def test(address):
-	sr=SplitRule.get(key_name=address)
-	if(not sr):
-		raise NoRuleException()
-
-	
-
 class NoRuleException(Exception):
 	def __init__(self):
 		super(NoRuleException,self).__init__("No rule associated with this address")
